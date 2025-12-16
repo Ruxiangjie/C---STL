@@ -1,0 +1,61 @@
+# ===================== VS2022 核心忽略项 =====================
+# VS 解决方案缓存/配置文件夹（隐藏，包含调试、缓存等）
+.vs/
+# 解决方案用户选项文件（保存个人调试配置、窗口布局等）
+*.suo
+# 项目用户选项文件（个性化配置，如调试路径、环境变量）
+*.user
+*.vcxproj.user
+*.vcxproj.filters.user
+*.vcxproj.DotSettings.user
+# IntelliSense 预编译头缓存（大型项目的临时索引文件）
+ipch/
+# 编译中间文件目录
+obj/
+# 编译输出目录（Debug/Release/平台相关）
+Debug/
+Release/
+x64/
+x86/
+Win32/
+ARM/
+ARM64/
+# 调试/编译产物
+*.pdb        # 调试符号文件
+*.ilk        # 增量链接文件
+*.exe        # 可执行文件
+*.dll        # 动态库
+*.lib        # 静态库（若为手动编译的库需保留，可注释此行）
+*.exp        # 导出符号文件
+*.manifest   # 程序集清单
+*.idb        # 增量编译数据库
+*.pdb.base
+*.pdb.compressed
+*.rsp        # 链接器响应文件
+*.tlog/      # 编译日志目录
+*.log        # 编译/构建日志
+# 临时文件
+*.tmp
+*.bak
+*.sdf        # 旧版 VS 的智能感知数据库（VS2022 已不用，但兼容忽略）
+*.opensdf
+# ===================== 系统通用忽略项 =====================
+# Mac 系统文件
+.DS_Store
+# Windows 系统文件
+Thumbs.db
+Desktop.ini
+# ===================== 可选忽略项（按需注释） =====================
+# 若使用 CMake 辅助构建，添加以下：
+# CMakeCache.txt
+# CMakeFiles/
+# cmake_install.cmake
+# Makefile
+# build/
+#
+# 若使用 Clang/LLVM 编译，添加以下：
+# *.o
+# *.dSYM/
+#
+# 若使用第三方代码格式化工具（如 Clang-Format），保留配置文件，不要忽略：
+# .clang-format  # 注释掉此行则不忽略，建议保留
