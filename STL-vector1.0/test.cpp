@@ -1,7 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include<initializer_list>
-#include"vector.h"
 #include<iostream>
+#include<algorithm>//°üº¬find
+#include"vector.h"
 
 using namespace std;
 
@@ -31,9 +32,9 @@ void test1()
 	v.insert(v.begin() + 1, 2);
 	v.erase(v.begin());
 }
+
 int main()
 {
 	test1();
 	return 0;
-
 }

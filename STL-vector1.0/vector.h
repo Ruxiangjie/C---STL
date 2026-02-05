@@ -11,27 +11,33 @@ namespace rxj
 	public:
 		typedef T* iterator;
 		typedef const T* const_iterator;
-		vector() 
-			/*:_start(nullptr)
-			,_finish(nullptr)
-			,_end_of_storage(nullptr)*///因为我在private里面已经把这几个值弄上了初始值，所以我把注释了
-		{
-			
-		}
+		//vector() 
+		//	/*:_start(nullptr)
+		//	,_finish(nullptr)
+		//	,_end_of_storage(nullptr)*///因为我在private里面已经把这几个值弄上了初始值，所以我把注释了
+		//{
+		//	
+		//}
 		//因为我们已经写了拷贝构造了，所以编译器不会生成默认构造函数，所以默认构造函数对我们来说就是很重要的了，c++给了一个方案就是vector() = default
 		//强制编译器生成默认构造函数
 		vector() = default;//强制编译器生成默认构造
 
-
-		vector(const vector<T>& v)//这里面的参数是带参数的vector
-			//:_start(nullptr)//我们在这里的初始化是为了不让编译器进行初始化的瞎赋值,如果让编译器随便赋值，第一步的reserve就会崩溃
-			//, _finish(nullptr)
-			//, _end_of_storage(nullptr)//因为我在private里面已经把这几个值弄上了初始值，所以我把注释了
+		//拷贝构造函数
+		vector(const vector<T>& v)
 		{
 			reserve(v.capacity());
 			for (auto& e : v)
 			{
 				push_back(e);
+			}
+		}
+		//使用initializer_list构造
+		vector(initializer_list li)
+		{
+			reserve(li.size());
+			for (auto e : li)
+			{
+				push_back(e);//e直接得到了li里面的数据
 			}
 		}
 
@@ -165,7 +171,7 @@ namespace rxj
 			*_finish = x;
 			++_finish;
 		}
-
+		//赋值运算符重载
 		const T& operator [](size_t n)const//如果传入的是一个不可修改的对象，那么返回值也要是一个不可修改的引用
 		{
 			assert(n < size());//这里的比较，应该是实际的元素个数
