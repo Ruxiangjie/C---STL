@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClInclude Include="vector.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="teat.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
