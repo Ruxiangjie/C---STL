@@ -7,36 +7,69 @@ namespace rxj
 		T data;
 		list_node<T>* _next;
 		list_node<T>* _prev;
-
-		List_node(const T& x = T())
+		list_node(const T& x = T())//这里我们要写带有缺省值的构造函数，因为我们在新开节点的时候，可以直接通过这个传入值
 			:data(x)
 			,_next(nullptr)
 			,_prev(nullptr)
 		{
-
 		}
 	};
 
-	template<class T>
+	template<class T,class Ref,class Ptr>
 	struct __list_iterator
 	{
 		typedef list_node<T> Node;
-		Node* node;
-
-		__list_iterator(Node* node)
+		typedef __list_iterator<T, Ref,Ptr> self;
+		__list_iterator(Node* node = nullptr)
 			:_node(node)
 		{
 		}
 
-
-		__list_iterator<T>& operator++()
+		self& operator++()//前置++
 		{
 			_node = _node->_next;
 			return *this;
 		}
-		T& operator*()
+
+		self operator++(int)//后置++
+		{
+			self temp(*this);
+			_node = _node->_next;
+			return temp;
+		}
+		self& operator--()//前置--
+		{
+			_node = _node->_prev;
+			return *this;
+		}
+
+		self operator--(int)//后置--
+		{
+			self temp(*this);
+			_node = _node->_prev;
+			return temp;
+		}
+
+		//解引用
+		Ref operator*()
 		{
 			return (_node->data);
+		}
+
+		//判断
+		bool operator!=(const self& it)
+		{
+			return _node != it._node;
+		}
+
+		bool operator==(const self& it)
+		{
+			return _node == it._node;
+		}
+
+		ptr operator->()
+		{
+			return &(_node->data);
 		}
 	private:
 		Node* _node;
@@ -45,11 +78,18 @@ namespace rxj
 	template<class T>
 	class list
 	{
-		typedef List_node<T> Node;
+		typedef list_node<T> Node;
 	public:
-		typedef __list_iterator<T> iterator;
-		typedef const__list_iterator<T> iterator;
-		
+		typedef __list_iterator<T,T&,T*> iterator;
+		typedef __list_iterator<T, const T&,const T*> const_iterator;
+		iterator begin()
+		{
+			return iterator(_head->_next);
+		}
+		iterator end()
+		{
+			return iterator(_head);
+		}
 		list()
 		{
 			_head = new Node;
