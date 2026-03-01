@@ -1,4 +1,8 @@
 #pragma once
+#include<initializer_list>
+#include<iostream>
+#include<algorithm>
+using namespace std;
 namespace rxj
 {
 	template<class T>
@@ -20,6 +24,7 @@ namespace rxj
 	{
 		typedef list_node<T> Node;
 		typedef __list_iterator<T, Ref,Ptr> self;
+		Node* _node;
 		__list_iterator(Node* node = nullptr)
 			:_node(node)
 		{
@@ -51,28 +56,26 @@ namespace rxj
 		}
 
 		//解引用
-		Ref operator*()
+		Ref operator*()const
 		{
 			return (_node->data);
 		}
 
 		//判断
-		bool operator!=(const self& it)
+		bool operator!=(const self& it)const
 		{
 			return _node != it._node;
 		}
 
-		bool operator==(const self& it)
+		bool operator==(const self& it)const
 		{
 			return _node == it._node;
 		}
 
-		ptr operator->()
+		Ptr operator->()const
 		{
 			return &(_node->data);
 		}
-	private:
-		Node* _node;
 	};
 
 	template<class T>
@@ -90,23 +93,139 @@ namespace rxj
 		{
 			return iterator(_head);
 		}
-		list()
+
+		const_iterator begin()const
+		{
+			return const_iterator(_head->_next);
+		}
+		const_iterator end()const
+		{
+			return const_iterator(_head);
+		}
+		//构造函数
+		void empty_init()
 		{
 			_head = new Node;
-			_head->next = _head;
-			_head->prev = _head;
+			_head->_next = _head;
+			_head->_prev = _head;
+		}
+		list()
+		{
+			empty_init();
+		}
+
+		list(initializer_list<T> li)
+		{
+			empty_init();
+			for (const auto& e : li)
+			{
+				push_back(e);
+			}
+		}
+
+		//析构函数
+		~list()
+		{
+			clear();
+			delete _head;
+		}
+		//拷贝构造函数
+		list(const list<T>& lt)
+		{
+			empty_init();
+			for (const auto& e : lt)
+			{
+				push_back(e);
+			}
+		}
+		//赋值运算符重载
+		//传统写法
+		list<T>& operator=(const list<T>& lt)
+		{
+			if (this!= &lt)//防止自己给自己赋值
+			{
+				clear();
+				for (const auto& e : lt)
+				{
+					push_back(e);
+				}
+			}
+			return *this;
+		}
+		//现代写法
+		void swap(list<T>& lt)
+		{
+			std::swap(this->_head,lt._head);
+			std::swap(this->_size, lt._size);
+		}
+		list<T>& operator=(list<T> lt)
+		{
+			swap(lt);
+			return *this;
+		}
+
+		void clear()
+		{
+			iterator it = begin();
+			while (it != end())
+			{
+				it = Erase(it);
+			}
 		}
 		void push_back(const T& x)
 		{
 			Node* newnode = new Node(x);
-			Node* tail = _head->prev;
+			Node* tail = _head->_prev;
 
-			tail->next = newnode;
-			newnode->prev = tail;
-			newnode->next = _head;
-			_head->prev = newnode;
+			tail->_next = newnode;
+			newnode->_prev = tail;
+			newnode->_next = _head;
+			_head->_prev = newnode;
+			++_size;
 		}
+		void pop_back()
+		{
+			Erase(--end());
+		}
+
+		size_t size()const
+		{
+			return _size;
+		}
+
+		iterator Insert(iterator pos,const T& val)
+		{
+			Node* cur = pos._node;
+			Node* newnode = new Node(val);
+			Node* prev = cur->_prev;
+
+			cur->_prev = newnode;
+			newnode->_next = cur;
+			prev->_next = newnode;
+			newnode->_prev = prev;
+		    ++_size;
+			return iterator(newnode);
+		}
+
+		iterator Erase(iterator pos)
+		{
+			if (pos == end())
+			{
+				return pos;
+			}
+			Node* cur = pos._node;
+			Node* prev = cur->_prev;
+			Node* next = cur->_next;
+
+			prev->_next = next;
+			next->_prev = prev;
+			delete cur;
+			--_size;
+			return iterator(next);
+		}
+
 	private:
 		Node* _head;
+		size_t _size = 0;
 	};
 }
